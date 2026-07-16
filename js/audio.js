@@ -9,3 +9,10 @@ function welcome(){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtter
 export function startMusic(){if(musicTimer)return;const themes=[[82,98,110,123,110,98],[110,146,164,196,164,146],[73,92,110,138,110,92]];musicTimer=setInterval(()=>{const notes=themes[theme%themes.length],n=notes[step%notes.length];tone(n,.18,0,'sawtooth',.022);if(step%2===0)tone(n*2,.05,.02,'triangle',.014);if(step%8===6)sfx('slot');step++;if(step%32===0)theme++},360)}
 export function stopMusic(){clearInterval(musicTimer);musicTimer=null}
 export function coinStorm(){const l=document.getElementById('coinStorm');l.innerHTML='';l.classList.add('show');for(let i=0;i<220;i++){const c=document.createElement('div');c.className='falling-coin';c.textContent='₵';c.style.left=Math.random()*100+'vw';c.style.setProperty('--dur',2.5+Math.random()*3.5+'s');c.style.setProperty('--delay',Math.random()*2+'s');c.style.setProperty('--drift',(Math.random()-.5)*320+'px');l.append(c)}sfx('jackpot');setTimeout(()=>sfx('cheer'),700);setTimeout(()=>{l.classList.remove('show');l.innerHTML=''},7000)}
+
+let voiceQueue=[],speakingNow=false;
+function pickVoice(){const v=speechSynthesis.getVoices();return v.find(x=>/zira|aria|ava|samantha|female/i.test(x.name))||v.find(x=>/^en/i.test(x.lang))||v[0]||null}
+function runVoice(){if(speakingNow||!voiceQueue.length)return;const item=voiceQueue.shift(),u=new SpeechSynthesisUtterance(item.text),v=pickVoice();if(v)u.voice=v;u.rate=item.rate||.9;u.pitch=item.pitch||1.03;u.volume=1;speakingNow=true;u.onend=u.onerror=()=>{speakingNow=false;setTimeout(runVoice,100)};speechSynthesis.speak(u)}
+export function queueVoice(text,opts={}){if(!("speechSynthesis" in window))return;voiceQueue.push({text,...opts});runVoice()}
+export function clearVoiceQueue(){voiceQueue=[];speakingNow=false;try{speechSynthesis.cancel()}catch(e){}}
+export function bingoCallVoice(n){const l=n<=15?"B":n<=30?"I":n<=45?"N":n<=60?"G":"O";queueVoice(`${l} ${n}`,{rate:.82})}

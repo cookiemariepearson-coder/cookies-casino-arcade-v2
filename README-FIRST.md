@@ -25,3 +25,11 @@ Build 2 will polish each game's rules, animation, voice, and Stripe Coin Store.
 
 ## Build 2
 Preserves the V2 layout and upgrades sign-in flow, audio, the 4x2 lobby, game animations, timers, turn visibility, and coin rewards.
+
+
+## Build 3
+Adds enforced game rules, clean decks, player controls, level-based loss deductions, upgraded coin packs, and stronger in-game sound effects.
+
+
+## Build 4
+Visible decks, Bingo caller voice queue, clearer card sequencing, and stronger sound feedback.

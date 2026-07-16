@@ -29,7 +29,7 @@ async function launchGame(def){
  document.getElementById("gameTitle").textContent=def.title;showView("gameView");module.mount(document.getElementById("gameHost"))
 }
 function showStore(){
- showView("storeView");const packs=[["Starter",500,"$1.99"],["Player",1200,"$3.99"],["High Roller",3000,"$7.99"],["VIP Vault",7500,"$14.99"]];
+ showView("storeView");const packs=[["Starter",5000,"$1.99"],["Player",12000,"$3.99"],["High Roller",30000,"$7.99"],["VIP Vault",75000,"$14.99"]];
  document.getElementById("coinPacks").innerHTML=packs.map(([n,c,p])=>`<div class="coin-pack"><h3>${n}</h3><strong>${c.toLocaleString()}</strong><p>Cookie Coins</p><button class="primary" data-pack="${n.toLowerCase().replaceAll(" ","_")}">${p}</button></div>`).join("");
  document.querySelectorAll("[data-pack]").forEach(b=>b.onclick=()=>alert("Stripe checkout will connect in V2 Build 2."))
 }
@@ -55,6 +55,7 @@ function bind(){
  document.getElementById("signOutBtn").onclick=async()=>{stopMusic();await signOut();showEntrance();document.getElementById("entranceStatus").textContent="Signed out."};
  document.getElementById("playGameBtn").onclick=playPending;document.getElementById("entryStoreBtn").onclick=()=>{hideModal("entryModal");showStore()};
  document.getElementById("welcomeStoreBtn").onclick=()=>{hideModal("welcomeCoinsModal");showStore()};
+ window.addEventListener("casino:store",()=>{showStore()});
  document.getElementById("soundBtn").onclick=()=>{state.sound=!state.sound;document.getElementById("soundBtn").textContent=state.sound?"🔊 SOUND":"🔇 MUTED";state.sound?startMusic():stopMusic()}
 }
 async function start(){

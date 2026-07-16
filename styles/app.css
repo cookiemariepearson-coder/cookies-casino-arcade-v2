@@ -80,3 +80,38 @@ button{border:0;border-radius:16px;padding:12px 20px;font-weight:900}
 .crush-board{display:grid;grid-template-columns:repeat(8,64px);gap:7px;justify-content:center}.crush-tile{width:64px;height:64px;font-size:34px;border-radius:14px}.bingo-ball-row{display:flex;gap:8px;overflow:auto;padding:10px;background:#0008;border-radius:14px}.bingo-ball{min-width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff2ba6,#6f2be8);font-weight:1000}
 .word-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.word-scramble{font-size:42px;letter-spacing:.14em;color:var(--gold);text-align:center;padding:18px}.chess-board{grid-template-columns:repeat(8,72px)}.chess-square{width:72px;height:72px;font-size:44px}.domino-tile{font-size:22px;padding:16px 18px}.coin-burst{position:fixed;z-index:8000;pointer-events:none;color:var(--gold);font-size:26px;font-weight:1000;text-shadow:0 2px 5px #000;animation:coinBurst 1.4s ease-out forwards}@keyframes coinBurst{to{transform:translateY(-110px) scale(1.4);opacity:0}}
 @media(max-width:1100px){.game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.game-grid{grid-template-columns:1fr}.color-arena{grid-template-columns:1fr}.crush-board{grid-template-columns:repeat(8,42px);gap:4px}.crush-tile{width:42px;height:42px;font-size:24px}.chess-board{grid-template-columns:repeat(8,42px)}.chess-square{width:42px;height:42px;font-size:28px}}
+
+
+/* ===== BUILD 3: RULES, CONTROLS, AND ECONOMY ===== */
+.game-control-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.game-control-row button{min-width:120px}
+.rules-box{padding:12px 16px;border-radius:16px;background:#120018;border:1px solid #ffffff22;color:#fff1c9;margin-bottom:12px}
+.rules-box summary{cursor:pointer;color:#ffd338;font-weight:1000}
+.player-seat{padding:12px;border-radius:18px;background:#0008;border:2px solid #ffffff22;text-align:center}
+.player-seat.active{border-color:#62f0cf;box-shadow:0 0 24px #62f0cf66}
+.seat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.spades-table{padding:18px;border-radius:50px;background:radial-gradient(circle,#12643f,#063321 70%,#031b12);border:10px solid #7b4b22}
+.rule-warning{color:#ffb2ca;font-weight:1000}
+.deck-pile{width:84px;height:118px;border-radius:14px;background:linear-gradient(135deg,#1b4f9f,#7a2ae8);border:3px solid white;display:grid;place-items:center;font-size:28px}
+.uno-button{font-size:24px;border-radius:50%;width:115px;height:115px;background:linear-gradient(#ff5e42,#d71920);color:white;border:5px solid #ffd338}
+.pull-three{animation:pullThree .6s ease-in-out}
+@keyframes pullThree{50%{transform:scale(1.16);box-shadow:0 0 35px #ff2ba6}}
+.bingo-card-levels{display:grid;grid-template-columns:repeat(2,minmax(250px,1fr));gap:15px}
+.bingo-card-levels.level-2{grid-template-columns:repeat(2,minmax(230px,1fr))}
+.bingo-card-levels.level-3{grid-template-columns:repeat(3,minmax(210px,1fr))}
+.caller-box{font-size:36px;text-align:center;color:#ffd338;font-weight:1000;padding:15px}
+.solitaire-felt{background:radial-gradient(circle,#176b45,#082e22);padding:18px;border-radius:22px}
+.chess-square.selected{outline:5px solid #62f0cf;z-index:2}
+.chess-square.legal{box-shadow:inset 0 0 0 5px #ffd338}
+.game-level{color:#62f0cf;font-weight:1000}
+.loss-note{color:#ff9fc6;font-weight:900}
+@media(max-width:850px){.seat-row{grid-template-columns:1fr}.bingo-card-levels.level-3{grid-template-columns:1fr}}
+
+.deck-area{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:14px;border-radius:18px;background:#0006;margin:12px 0}
+.deck-stack{width:88px;height:124px;border-radius:14px;background:linear-gradient(135deg,#1a4d9f,#7b2bea);border:3px solid white;box-shadow:8px 8px 0 #0b1f46,12px 12px 0 #350c57;display:grid;place-items:center;font-size:34px;font-weight:1000}
+.deck-stack.empty{background:#222;box-shadow:none;color:#aaa}.deck-count{font-weight:1000;color:#ffd338;text-align:center}
+.caller-panel{padding:18px;border-radius:22px;background:linear-gradient(145deg,#4b123f,#1a001e);border:3px solid #ffd338;text-align:center;box-shadow:0 0 30px #ff2ba655}
+.caller-panel .called-number{font-size:56px;color:#ffd338;font-weight:1000}.caller-panel .caller-status{color:#62f0cf;font-weight:900}
+.voice-toggle{background:#1d0a27;color:white;border:2px solid #62f0cf}
+.play-sequence{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;min-height:150px}
+.sequence-step{opacity:.45;transition:.25s}.sequence-step.active{opacity:1;transform:scale(1.06);filter:drop-shadow(0 0 18px #ffd338)}
