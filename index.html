@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cookie's Casino Arcade V2</title>
+  <link rel="stylesheet" href="/styles/app.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="coinStorm" class="coin-storm" aria-hidden="true"></div>
+
+  <main id="entranceScreen" class="screen screen-active entrance-screen">
+    <section class="entrance-card">
+      <div class="crown">♛</div>
+      <p class="eyebrow">WELCOME TO</p>
+      <h1>Cookie's Casino Arcade</h1>
+      <p class="tagline">Eight sweet games. Big casino energy. One fun place.</p>
+      <div id="entranceStatus" class="status-line">Checking player account…</div>
+      <div class="entrance-actions">
+        <button id="enterBtn" class="primary big" type="button">ENTER</button>
+        <button id="signInBtn" class="secondary" type="button">SIGN IN</button>
+        <button id="createBtn" class="secondary" type="button">CREATE ACCOUNT</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="appScreen" class="screen app-screen">
+    <header class="topbar">
+      <button id="homeBtn" class="brand-button" type="button">🍪 COOKIE'S ARCADE</button>
+      <div class="top-actions">
+        <button id="soundBtn" class="small-control" type="button">🔊 SOUND</button>
+        <button id="storeBtn" class="coin-badge" type="button">🪙 <span id="coinBalance">0</span></button>
+        <button id="accountBtn" class="small-control" type="button">ACCOUNT</button>
+        <button id="signOutBtn" class="small-control" type="button">SIGN OUT</button>
+      </div>
+    </header>
+
+    <section id="lobbyView" class="view view-active">
+      <div class="hero">
+        <p class="eyebrow">COOKIE'S CASINO ARCADE V2</p>
+        <h2>Choose Your Game</h2>
+        <p>Each game opens by itself. Your wallet and progress remain secure.</p>
+      </div>
+      <div id="gameGrid" class="game-grid"></div>
+    </section>
+
+    <section id="gameView" class="view">
+      <div class="game-toolbar">
+        <button id="backLobbyBtn" class="secondary" type="button">← BACK TO LOBBY</button>
+        <div id="gameTitle" class="game-title"></div>
+      </div>
+      <div id="gameHost" class="game-host"></div>
+    </section>
+
+    <section id="storeView" class="view">
+      <div class="panel">
+        <div class="game-toolbar">
+          <button data-back-lobby class="secondary" type="button">← BACK</button>
+          <h2>Cookie Coin Store</h2>
+        </div>
+        <p>Purchase Cookie Coins to keep playing. Cookie Coins have no cash value.</p>
+        <div id="coinPacks" class="coin-packs"></div>
+      </div>
+    </section>
+
+    <section id="accountView" class="view">
+      <div class="panel">
+        <div class="game-toolbar">
+          <button data-back-lobby class="secondary" type="button">← BACK</button>
+          <h2>Player Account</h2>
+        </div>
+        <div id="accountDetails"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="authModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-x" data-close-modal="authModal" type="button">×</button>
+      <h2>Cookie's Player Account</h2>
+      <div class="tab-row">
+        <button id="authSignInTab" class="tab active" type="button">Sign In</button>
+        <button id="authCreateTab" class="tab" type="button">Create Account</button>
+      </div>
+      <label id="playerNameWrap">Player Name
+        <input id="authPlayerName" autocomplete="nickname" maxlength="24" value="Cookie">
+      </label>
+      <label>Email
+        <input id="authEmail" type="email" autocomplete="email">
+      </label>
+      <label>Password
+        <input id="authPassword" type="password" autocomplete="current-password">
+      </label>
+      <button id="authSubmit" class="primary full" type="button">SIGN IN</button>
+      <button id="resetPasswordBtn" class="link-button" type="button">Reset Password</button>
+      <div id="authMessage" class="modal-message"></div>
+    </div>
+  </div>
+
+  <div id="entryModal" class="modal" aria-hidden="true">
+    <div class="modal-card compact">
+      <button class="modal-x" data-close-modal="entryModal" type="button">×</button>
+      <h2 id="entryGameName">Game</h2>
+      <div class="wallet-big">🪙 <span id="entryWallet">0</span> Coins</div>
+      <div class="fee-box">Game Entry <strong id="entryFee">0 Coins</strong></div>
+      <div id="entryMessage" class="modal-message"></div>
+      <div class="button-row">
+        <button id="playGameBtn" class="primary" type="button">PLAY NOW</button>
+        <button id="entryStoreBtn" class="secondary" type="button">BUY COINS</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="welcomeCoinsModal" class="modal" aria-hidden="true">
+    <div class="modal-card compact">
+      <button class="modal-x" data-close-modal="welcomeCoinsModal" type="button">×</button>
+      <h2>Welcome, Cookie Player!</h2>
+      <div class="wallet-big">🪙 <span id="welcomeBalance">0</span></div>
+      <p>You can start playing now or visit the Coin Store.</p>
+      <div class="button-row">
+        <button data-close-modal="welcomeCoinsModal" class="primary" type="button">KEEP PLAYING</button>
+        <button id="welcomeStoreBtn" class="secondary" type="button">BUY COINS</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
