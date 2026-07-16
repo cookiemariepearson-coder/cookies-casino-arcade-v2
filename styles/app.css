@@ -115,3 +115,11 @@ button{border:0;border-radius:16px;padding:12px 20px;font-weight:900}
 .voice-toggle{background:#1d0a27;color:white;border:2px solid #62f0cf}
 .play-sequence{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;min-height:150px}
 .sequence-step{opacity:.45;transition:.25s}.sequence-step.active{opacity:1;transform:scale(1.06);filter:drop-shadow(0 0 18px #ffd338)}
+
+.free-play-banner{
+  max-width:520px;margin:14px auto;padding:11px 16px;border-radius:15px;
+  background:#062d25;color:#62f0cf;border:2px solid #62f0cf;
+  font-weight:1000;text-align:center
+}
+.game-cost{color:#62f0cf!important;font-size:18px;letter-spacing:.08em}
+button:disabled{opacity:.55;cursor:not-allowed}

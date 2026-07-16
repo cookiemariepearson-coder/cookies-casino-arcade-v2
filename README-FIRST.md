@@ -33,3 +33,7 @@ Adds enforced game rules, clean decks, player controls, level-based loss deducti
 
 ## Build 4
 Visible decks, Bingo caller voice queue, clearer card sequencing, and stronger sound feedback.
+
+
+## Build 5
+All games are free to enter. Coins are no longer deducted when opening a game. Coins remain part of prizes, purchases, losses, forfeits, and timeout penalties. Added safer game loading and duplicate-launch protection.

@@ -5,28 +5,53 @@ import {renderBalance,chargeEntry} from "./coins.js";
 import {unlockAudio,startMusic,stopMusic,coinStorm,sfx} from "./audio.js";
 
 const modules={};
-let pendingDef=null,currentModule=null;
+let pendingDef=null,currentModule=null,launchingGame=false;
 
 function renderLobby(){
  const grid=document.getElementById("gameGrid");grid.innerHTML="";
- GAME_DEFS.forEach(g=>{const card=document.createElement("article");card.className="game-card";card.innerHTML=`<div><div class="game-icon">${g.icon}</div><h3>${g.title}</h3><p>${g.desc}</p></div><div><div class="game-cost">Entry: ${g.cost} coins</div><button class="primary full">PLAY</button></div>`;
+ GAME_DEFS.forEach(g=>{const card=document.createElement("article");card.className="game-card";card.innerHTML=`<div><div class="game-icon">${g.icon}</div><h3>${g.title}</h3><p>${g.desc}</p></div><div><div class="game-cost">FREE PLAY</div><button class="primary full">PLAY</button></div>`;
  card.querySelector("button").onclick=()=>openEntry(g);grid.append(card)})
 }
 async function openEntry(def){
- if(!state.user){setAuthMode("signin");showModal("authModal");return}
- try{await loadAccount()}catch(e){}
- pendingDef=def;document.getElementById("entryGameName").textContent=def.title;document.getElementById("entryWallet").textContent=state.coins.toLocaleString();
- document.getElementById("entryFee").textContent=def.cost+" Coins";document.getElementById("entryMessage").textContent=state.coins<def.cost?"You need more Cookie Coins.":"Your wallet is ready.";
- document.getElementById("playGameBtn").disabled=state.coins<def.cost;showModal("entryModal")
+ if(!state.user){
+   setAuthMode("signin");
+   showModal("authModal");
+   return;
+ }
+ try{
+   await loadAccount();
+   renderBalance();
+ }catch(error){
+   console.warn("Wallet refresh warning:",error);
+ }
+ await launchGame(def);
 }
 async function playPending(){
  if(!pendingDef)return;
  try{await chargeEntry(pendingDef.id);hideModal("entryModal");await launchGame(pendingDef);pendingDef=null}catch(e){document.getElementById("entryMessage").textContent=e.message}
 }
 async function launchGame(def){
- if(currentModule?.unmount)currentModule.unmount();
- const module=await import(`/games/${def.id}.js`);modules[def.id]=module;currentModule=module;state.currentGame=def.id;
- document.getElementById("gameTitle").textContent=def.title;showView("gameView");module.mount(document.getElementById("gameHost"))
+ if(launchingGame)return;
+ launchingGame=true;
+ const host=document.getElementById("gameHost");
+ try{
+   try{currentModule?.unmount?.()}catch(error){console.warn("Unmount warning:",error)}
+   document.getElementById("gameTitle").textContent=def.title;
+   showView("gameView");
+   host.innerHTML='<div class="game-shell"><div class="action-feed">Loading game…</div></div>';
+   const module=modules[def.id]||await import(`/games/${def.id}.js`);
+   modules[def.id]=module;
+   currentModule=module;
+   state.currentGame=def.id;
+   host.innerHTML="";
+   module.mount(host);
+ }catch(error){
+   console.error(error);
+   host.innerHTML='<div class="game-shell"><div class="action-feed">The game did not finish loading. Return to the lobby and try again.</div><div class="game-control-row"><button id="loadBack" class="secondary">BACK TO LOBBY</button></div></div>';
+   host.querySelector("#loadBack")?.addEventListener("click",()=>showView("lobbyView"));
+ }finally{
+   launchingGame=false;
+ }
 }
 function showStore(){
  showView("storeView");const packs=[["Starter",5000,"$1.99"],["Player",12000,"$3.99"],["High Roller",30000,"$7.99"],["VIP Vault",75000,"$14.99"]];
