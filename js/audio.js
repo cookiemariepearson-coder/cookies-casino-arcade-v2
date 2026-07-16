@@ -1,26 +1,11 @@
-let ctx=null,musicTimer=null,step=0;
+let ctx=null,musicTimer=null,step=0,theme=0;
 function context(){if(!ctx){const C=window.AudioContext||window.webkitAudioContext;if(C)ctx=new C()}return ctx}
-export async function unlockAudio(){const c=context();if(c?.state==="suspended")await c.resume();tone(330,.08);tone(495,.1,.06)}
-export function tone(freq,dur=.08,delay=0,type="triangle",vol=.045){
- const c=context();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;
- o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
- o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.02)
-}
-export function sfx(name){
- if(name==="win")[523,659,784,1046].forEach((f,i)=>tone(f,.16,i*.07));
- else if(name==="bad"){tone(160,.15,0,"sawtooth");tone(100,.18,.08,"sawtooth")}
- else if(name==="coin"){tone(740,.05);tone(980,.07,.05)}
- else if(name==="card"){tone(420,.04);tone(610,.04,.035)}
- else tone(350,.05)
-}
-export function startMusic(){
- if(musicTimer)return;const notes=[82,98,110,123,110,98];
- musicTimer=setInterval(()=>{tone(notes[step%notes.length],.17,0,"sawtooth",.022);if(step%4===0)tone(523,.05,.03,"triangle",.012);step++},360)
-}
+export async function unlockAudio(){const c=context();if(c?.state==='suspended')await c.resume();welcome();fanfare()}
+export function tone(f,d=.08,delay=0,type='triangle',vol=.045){const c=context();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.02)}
+function noise(d=.1,v=.02,delay=0){const c=context();if(!c)return;const len=Math.floor(c.sampleRate*d),buf=c.createBuffer(1,len,c.sampleRate),a=buf.getChannelData(0);for(let i=0;i<len;i++)a[i]=(Math.random()*2-1)*(1-i/len);const s=c.createBufferSource(),g=c.createGain(),t=c.currentTime+delay;s.buffer=buf;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(g);g.connect(c.destination);s.start(t)}
+function fanfare(){[392,523,659,784,1046].forEach((f,i)=>tone(f,.18,i*.08));noise(.25,.025,.18)}
+export function sfx(n){if(n==='win'){[523,659,784,1046].forEach((f,i)=>tone(f,.18,i*.07));noise(.18,.025,.1)}else if(n==='jackpot'){[330,440,554,659,880,1046].forEach((f,i)=>tone(f,.16,i*.06,'square',.04));noise(.3,.03,.2)}else if(n==='cheer'){for(let i=0;i<5;i++){tone(520+Math.random()*300,.08,i*.08);noise(.08,.018,i*.08)}}else if(n==='slot'){tone(900,.04);tone(1200,.04,.06);tone(1500,.08,.12)}else if(n==='bad'){tone(160,.15,0,'sawtooth');tone(100,.18,.08,'sawtooth')}else if(n==='coin'){tone(740,.05);tone(980,.07,.05)}else if(n==='card'){noise(.05,.035);tone(420,.035,.015)}else if(n==='tick')tone(760,.025,0,'square',.018);else tone(350,.05)}
+function welcome(){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance("Welcome to Cookie's Casino Arcade!");u.rate=.95;u.pitch=1.05;u.volume=1;const vs=speechSynthesis.getVoices(),v=vs.find(x=>/female|samantha|zira|aria|ava/i.test(x.name));if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
+export function startMusic(){if(musicTimer)return;const themes=[[82,98,110,123,110,98],[110,146,164,196,164,146],[73,92,110,138,110,92]];musicTimer=setInterval(()=>{const notes=themes[theme%themes.length],n=notes[step%notes.length];tone(n,.18,0,'sawtooth',.022);if(step%2===0)tone(n*2,.05,.02,'triangle',.014);if(step%8===6)sfx('slot');step++;if(step%32===0)theme++},360)}
 export function stopMusic(){clearInterval(musicTimer);musicTimer=null}
-export function coinStorm(){
- const layer=document.getElementById("coinStorm");layer.innerHTML="";layer.classList.add("show");
- for(let i=0;i<180;i++){const c=document.createElement("div");c.className="falling-coin";c.textContent="₵";c.style.left=Math.random()*100+"vw";
- c.style.setProperty("--dur",2.5+Math.random()*3.5+"s");c.style.setProperty("--delay",Math.random()*1.8+"s");c.style.setProperty("--drift",(Math.random()-.5)*280+"px");layer.append(c)}
- sfx("win");setTimeout(()=>{layer.classList.remove("show");layer.innerHTML=""},6500)
-}
+export function coinStorm(){const l=document.getElementById('coinStorm');l.innerHTML='';l.classList.add('show');for(let i=0;i<220;i++){const c=document.createElement('div');c.className='falling-coin';c.textContent='₵';c.style.left=Math.random()*100+'vw';c.style.setProperty('--dur',2.5+Math.random()*3.5+'s');c.style.setProperty('--delay',Math.random()*2+'s');c.style.setProperty('--drift',(Math.random()-.5)*320+'px');l.append(c)}sfx('jackpot');setTimeout(()=>sfx('cheer'),700);setTimeout(()=>{l.classList.remove('show');l.innerHTML=''},7000)}

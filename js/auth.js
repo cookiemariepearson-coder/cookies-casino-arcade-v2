@@ -23,7 +23,7 @@ export async function submitAuth(){
   else message.textContent="Check your email to confirm your account."
  }else{
   const {data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;
-  state.session=data.session;state.user=data.user;message.textContent="Signed in. Close this box and press ENTER."
+  state.session=data.session;state.user=data.user;message.textContent="Signed in."
  }
 }
 export async function signOut(){await client.auth.signOut();state.session=null;state.user=null}

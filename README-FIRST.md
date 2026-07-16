@@ -21,3 +21,7 @@ This is the clean modular rebuild.
 ## Build 1 scope
 This build establishes the stable architecture and includes playable foundation versions of all eight games.
 Build 2 will polish each game's rules, animation, voice, and Stripe Coin Store.
+
+
+## Build 2
+Preserves the V2 layout and upgrades sign-in flow, audio, the 4x2 lobby, game animations, timers, turn visibility, and coin rewards.

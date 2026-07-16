@@ -1,17 +1,1 @@
-import {deck,cardHTML} from "./helpers.js";import {reward} from "../js/coins.js";import {sfx} from "../js/audio.js";
-let hand=[],scores=[0,0],played=[];
-export function mount(host){
- hand=deck().slice(0,13).sort((a,b)=>a.v-b.v);played=[];draw(host,"Choose a card. Four cards complete each trick.")
-}
-function draw(host,msg){
- host.innerHTML=`<div class="game-shell"><div class="game-hud"><div class="hud-box">Cookie Team: <b>${scores[0]}</b></div><div class="hud-box">Opp Team: <b>${scores[1]}</b></div><div class="hud-box">Goal: 10 tricks</div></div>
- <div class="action-feed">${msg}</div><div class="card-row" id="spadesPlayed">${played.map(cardHTML).join("")}</div><h3>Your Hand</h3><div class="card-row" id="spadesHand"></div></div>`;
- const row=host.querySelector("#spadesHand");hand.forEach((c,i)=>{const w=document.createElement("button");w.innerHTML=cardHTML(c);w.className="selectable";w.onclick=()=>play(host,i);row.append(w)})
-}
-function play(host,i){
- const mine=hand.splice(i,1)[0],d=deck();played=[mine,d[0],d[1],d[2]];sfx("card");
- const highest=Math.max(...played.map(c=>c.v)),won=mine.v===highest;scores[won?0:1]++;
- draw(host,won?"Cookie Team won that trick!":"Opponent Team won that trick.");
- setTimeout(()=>{played=[];if(!hand.length||scores[0]>=10||scores[1]>=10){if(scores[0]>scores[1])reward("spades",300);scores=[0,0];hand=deck().slice(0,13)}draw(host,"Choose the next card.")},1400)
-}
-export function unmount(){}
+import {deck,cardHTML} from './helpers.js';import {reward} from '../js/coins.js';import {sfx} from '../js/audio.js';import {showResult} from './result.js';let hand=[],scores=[0,0],played=[],locked=false;export function mount(h){hand=deck().slice(0,13).sort((a,b)=>a.v-b.v);scores=[0,0];played=[];locked=false;draw(h,'Your turn — choose one card.')}function draw(h,m){h.innerHTML=`<div class="game-shell"><div class="game-hud"><div class="hud-box">Cookie Team: <b>${scores[0]}</b></div><div class="hud-box">Opp Team: <b>${scores[1]}</b></div><div class="hud-box">Race to 10 tricks</div></div><div class="turn-banner">${m}</div><div class="played-trick">${played.map(x=>`<div class="played-slot"><div>${x.name}</div>${cardHTML(x.card)}</div>`).join('')}</div><h3>Your Hand</h3><div class="card-row" id="hand"></div></div>`;const r=h.querySelector('#hand');hand.forEach((c,i)=>{const b=document.createElement('button');b.innerHTML=cardHTML(c);b.className='selectable';b.disabled=locked;b.onclick=()=>play(h,i);r.append(b)})}async function play(h,i){if(locked)return;locked=true;const mine=hand.splice(i,1)[0];played=[{name:'Cookie',card:mine}];draw(h,'Cookie played.');const names=['Left Opp','Partner','Right Opp'],d=deck();for(let n=0;n<3;n++){await new Promise(r=>setTimeout(r,850));played.push({name:names[n],card:d[n]});sfx('card');draw(h,names[n]+' played.')}await new Promise(r=>setTimeout(r,900));const high=Math.max(...played.map(x=>x.card.v)),won=mine.v===high;scores[won?0:1]++;played=[];if(scores[0]>=10||scores[1]>=10||!hand.length){const w=scores[0]>scores[1],coins=w?220:0;if(w)await reward('spades',coins);showResult(h,{title:w?'Cookie Team Wins!':'Opponent Team Wins',message:`Final tricks ${scores[0]} to ${scores[1]}.`,coins,win:w,onContinue:()=>mount(h)});return}locked=false;draw(h,won?'Cookie Team won the trick!':'Opponent Team won the trick.')}export function unmount(){locked=true}

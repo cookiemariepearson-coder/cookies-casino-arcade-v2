@@ -46,7 +46,7 @@ function bind(){
  document.getElementById("signInBtn").onclick=()=>{setAuthMode("signin");showModal("authModal")};
  document.getElementById("createBtn").onclick=()=>{setAuthMode("create");showModal("authModal")};
  document.getElementById("authSignInTab").onclick=()=>setAuthMode("signin");document.getElementById("authCreateTab").onclick=()=>setAuthMode("create");
- document.getElementById("authSubmit").onclick=async()=>{try{await submitAuth();document.getElementById("entranceStatus").textContent="Account ready — press ENTER."}catch(e){document.getElementById("authMessage").textContent=e.message}};
+ document.getElementById("authSubmit").onclick=async()=>{try{await submitAuth();hideModal("authModal");document.getElementById("entranceStatus").textContent="Account ready — press ENTER."}catch(e){document.getElementById("authMessage").textContent=e.message}};
  document.getElementById("resetPasswordBtn").onclick=async()=>{try{await resetPassword();document.getElementById("authMessage").textContent="Password reset email sent."}catch(e){document.getElementById("authMessage").textContent=e.message}};
  document.querySelectorAll("[data-close-modal]").forEach(b=>b.onclick=()=>hideModal(b.dataset.closeModal));
  document.getElementById("homeBtn").onclick=()=>showView("lobbyView");document.getElementById("backLobbyBtn").onclick=()=>{currentModule?.unmount?.();showView("lobbyView")};
